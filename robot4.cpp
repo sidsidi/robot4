@@ -66,32 +66,38 @@ robot4::~robot4()
 
 void robot4::on_horizontalSlider_1_valueChanged(int value)
 {
-    robot4::updateMotors(QString("A%1").arg(value));
+    robot4::updateMotors(QString("%1").arg(value+1000));
+    qDebug () << QString("%1").arg(value+1000);
 }
 
 void robot4::on_horizontalSlider_2_valueChanged(int value)
 {
-    robot4::updateMotors(QString("B%1").arg(value));
+    robot4::updateMotors(QString("%1").arg(value+2000));
+    qDebug () << QString("%1").arg(value+2000);
 }
 
 void robot4::on_horizontalSlider_3_valueChanged(int value)
 {
-    robot4::updateMotors(QString("C%1").arg(value));
+    robot4::updateMotors(QString("%1").arg(value+3000));
+    qDebug () << QString("%1").arg(value+3000);
 }
 
 void robot4::on_horizontalSlider_4_valueChanged(int value)
 {
-    robot4::updateMotors(QString("D%1").arg(value));
+    robot4::updateMotors(QString("%1").arg(value+4000));
+    qDebug () << QString("%1").arg(value+4000);
 }
 
 void robot4::on_horizontalSlider_5_valueChanged(int value)
 {
-    robot4::updateMotors(QString("E%1").arg(value));
+    robot4::updateMotors(QString("%1").arg(value+5000));
+    qDebug () << QString("%1").arg(value+5000);
 }
 
 void robot4::on_horizontalSlider_6_valueChanged(int value)
 {
-    robot4::updateMotors(QString("F%1").arg(value));
+    robot4::updateMotors(QString("%1").arg(value+6000));
+    qDebug () << QString("%1").arg(value+6000);
 }
 
 void robot4::updateMotors(QString command)
