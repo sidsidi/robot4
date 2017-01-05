@@ -4,15 +4,20 @@
 #include <QMainWindow>
 #include <QSerialPort>
 
+
+
 namespace Ui {
 class robot4;
 }
+
+//int tab[1000];
 
 class robot4 : public QMainWindow
 {
     Q_OBJECT
 
 public:
+
     explicit robot4(QWidget *parent = 0);
     ~robot4();
 
@@ -31,6 +36,16 @@ private slots:
 
     void updateMotors(QString);
 
+
+    void on_recordButton_clicked();
+
+    void on_playButton_clicked();
+
+    void on_pauseButton_clicked();
+
+    void on_stopButton_clicked();
+
+    void on_resetButton_clicked();
 
 private:
     Ui::robot4 *ui;

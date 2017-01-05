@@ -5,6 +5,9 @@
 #include <QDebug>
 #include <QtWidgets>
 
+bool rec=0, play=0;
+int rec_i=0, play_i=0;
+QString rec_tab[1000];
 
 robot4::robot4(QWidget *parent) :
     QMainWindow(parent),
@@ -67,45 +70,92 @@ robot4::~robot4()
 void robot4::on_horizontalSlider_1_valueChanged(int value)
 {
     robot4::updateMotors(QString("%1").arg(value+1000));
-    qDebug () << QString("%1").arg(value+1000);
 }
 
 void robot4::on_horizontalSlider_2_valueChanged(int value)
 {
     robot4::updateMotors(QString("%1").arg(value+2000));
-    qDebug () << QString("%1").arg(value+2000);
 }
 
 void robot4::on_horizontalSlider_3_valueChanged(int value)
 {
     robot4::updateMotors(QString("%1").arg(value+3000));
-    qDebug () << QString("%1").arg(value+3000);
 }
 
 void robot4::on_horizontalSlider_4_valueChanged(int value)
 {
     robot4::updateMotors(QString("%1").arg(value+4000));
-    qDebug () << QString("%1").arg(value+4000);
 }
 
 void robot4::on_horizontalSlider_5_valueChanged(int value)
 {
     robot4::updateMotors(QString("%1").arg(value+5000));
-    qDebug () << QString("%1").arg(value+5000);
 }
 
 void robot4::on_horizontalSlider_6_valueChanged(int value)
 {
     robot4::updateMotors(QString("%1").arg(value+6000));
-    qDebug () << QString("%1").arg(value+6000);
 }
 
 void robot4::updateMotors(QString command)
 {
     if(arduino->isWritable()){
+        arduino->putChar('A');
         arduino->write(command.toStdString().c_str());
+   qDebug() << "OK: "<< command.toStdString().c_str();
+        if (rec==1)
+        {
+            qDebug() << "OK: "<< command.toStdString().c_str();
+            rec_tab[rec_i++]=command.toStdString().c_str();
+        }
     }
     else{
         qDebug() << "Nie moglem wyslac sygnalu na port szeregowy";
     }
+}
+
+
+void robot4::on_recordButton_clicked()
+{
+    rec=1;
+}
+
+void robot4::on_playButton_clicked()
+{
+    rec=0;
+    play=1;
+   //while(play!=0)
+    {
+        for (play_i;play_i<=rec_i;play_i++)
+        {
+            qDebug()<<"now: "<<rec_tab[play_i];
+            robot4::updateMotors(QString("%1").arg(rec_tab[play_i]));
+        }
+
+        play_i=0;
+    }
+}
+void robot4::on_pauseButton_clicked()
+{
+    rec=0;
+    play=0;
+}
+
+void robot4::on_stopButton_clicked()
+{
+    rec=0;
+    play=0;
+    play_i=0;
+}
+
+void robot4::on_resetButton_clicked()
+{
+    rec=0;
+    play=0;
+    for (int i=0;i<=rec_i;i++)
+    {
+        rec_tab[i]="";
+    }
+    play_i=0;
+    rec_i=0;
 }

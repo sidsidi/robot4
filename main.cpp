@@ -1,5 +1,5 @@
-#include "robot4.h"
 #include <QApplication>
+#include "robot4.h"
 
 int main(int argc, char *argv[])
 {

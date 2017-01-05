@@ -1,8 +1,7 @@
 #include <Servo.h>
 
 Servo base, up, forward, claw; 
-void pos_write (char c, int pos);
-int b;
+void pos_write (int pos);
 
 void setup()
 {
@@ -10,50 +9,52 @@ void setup()
   forward.attach(5);
   up.attach(6);
   claw.attach(9);
-  pos_write('A',90);
-  pos_write('B',50);
-  pos_write('C',110);
-  pos_write('D',60);
+  
+  pos_write(1090);
+  pos_write(2050);
+  pos_write(3110);
+  pos_write(4060);
   Serial.begin(9600);
 }
 
 void loop()
 {
+ 
  if (Serial.available())
   {
     char flag = Serial.read();
     int pos = Serial.parseInt();
-    pos_write(flag,pos);
+    pos_write(pos);     
   }
 }
 
 
-void pos_write (char c, int pos)
+void pos_write (int pos)
 {
-  switch(c)
-{
-  case 'A':
+
+  if (pos>=1000&&pos<=1180)
   {
+    pos=map(pos,1000,1180,0,180);
     base.write(constrain(pos,0,180));
-    break;
   }
-  case 'B':
+  
+  if (pos>=2000&&pos<=2180)
   {
- 
-    forward.write(constrain(pos,20,100));
-    break;
+    pos=map(pos,2000,2180,0,180);
+    forward.write(constrain(pos,0,180));
   }
-  case 'C':
+  
+  if (pos>=3000&&pos<=3180)
   {
-    up.write(constrain(pos,40,110));
-    break;
+    pos=map(pos,3000,3180,0,180);
+    up.write(constrain(pos,0,180)); 
   }
-  case 'D':
+  
+  if (pos>=4000&&pos<=4180)
   {
-    claw.write(constrain(pos,60,160));
-    break;
+    pos=map(pos,4000,4180,0,180);
+    claw.write(constrain(pos,0,180));
   }
-}
-delay (10);
-return;
+  
+  delay (10);
 }
