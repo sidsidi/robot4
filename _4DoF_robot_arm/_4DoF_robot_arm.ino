@@ -1,7 +1,15 @@
 #include <Servo.h>
 
 Servo base, up, forward, claw; 
-void pos_write (int pos);
+int a=90, b=50,c=110,d=60;
+int speed=20;
+
+void pos_write (char mode, int pos);
+void pos_base (int pos);
+void pos_forward (int pos);
+void pos_up (int pos);
+void pos_claw (int pos);
+
 
 void setup()
 {
@@ -10,11 +18,12 @@ void setup()
   up.attach(6);
   claw.attach(9);
   
-  pos_write(1090);
-  pos_write(2050);
-  pos_write(3110);
-  pos_write(4060);
   Serial.begin(9600);
+  
+  pos_write('M',a+1000);
+  pos_write('M',b+2000);
+  pos_write('M',c+3000);
+  pos_write('M',d+4000);
 }
 
 void loop()
@@ -24,37 +33,135 @@ void loop()
   {
     char flag = Serial.read();
     int pos = Serial.parseInt();
-    pos_write(pos);     
+    pos_write(flag, pos);     
   }
 }
 
 
-void pos_write (int pos)
+void pos_write (char mode, int pos)
 {
+switch (mode)
+  {
+    case 'M':
+    {
+      if (pos>=1000&&pos<=1180)
+      {
+        pos=map(pos,1000,1180,0,180);
+        pos=constrain(pos,0,180);
+        pos_base(pos);        
+      }
+  
+      if (pos>=2000&&pos<=2180)
+      {
+        pos=map(pos,2000,2180,0,180);
+        pos=constrain(pos,0,180);
+        pos_forward(pos);                 
+      }
+      
+      if (pos>=3000&&pos<=3180)
+      {
+        pos=map(pos,3000,3180,0,180);
+        pos=constrain(pos,0,180);
+        pos_up(pos);
+      }
+      
+      if (pos>=4000&&pos<=4180)
+      {
+        pos=map(pos,4000,4180,0,180);
+        pos=constrain(pos,0,180);
+        pos_claw(pos);
+      }
+      break;
+    }
+    
+    case 'S':
+    {
+      speed=pos;
+      break;
+    }
+  }  
+}
 
-  if (pos>=1000&&pos<=1180)
+void pos_base(int pos)
+{
+  if (a<pos)
   {
-    pos=map(pos,1000,1180,0,180);
-    base.write(constrain(pos,0,180));
-  }
+    for (a;a<=pos;a+=2)
+    {
+      base.write(a);
+      delay(20-speed);
+    }
+  } 
   
-  if (pos>=2000&&pos<=2180)
+  if (a>pos)
   {
-    pos=map(pos,2000,2180,0,180);
-    forward.write(constrain(pos,0,180));
-  }
-  
-  if (pos>=3000&&pos<=3180)
+    for (a;a>=pos;a-=2)
+    {
+      base.write(a);
+      delay(20-speed);
+    }
+  }  
+}
+
+void pos_forward(int pos)
+{
+  if (b<pos)
   {
-    pos=map(pos,3000,3180,0,180);
-    up.write(constrain(pos,0,180)); 
-  }
-  
-  if (pos>=4000&&pos<=4180)
+    for (b;b<=pos;b+=2)
+    {
+      forward.write(b);
+      delay(20-speed);
+    }
+  }  
+      
+  if (b>pos)
   {
-    pos=map(pos,4000,4180,0,180);
-    claw.write(constrain(pos,0,180));
-  }
-  
-  delay (10);
+    for (b;b>=pos;b-=2)
+    {
+      forward.write(b);
+      delay(20-speed);
+    }
+  }  
+}
+
+void pos_up(int pos)
+{
+  if (c<pos)
+  {
+    for (c;c<=pos;c+=2)
+    {
+      up.write(c);
+      delay(20-speed);
+    }
+  }  
+      
+  if (c>pos)
+  {
+    for (c;c>=pos;c-=2)
+    {
+      up.write(c);
+      delay(20-speed);
+    }
+  }  
+}
+
+void pos_claw(int pos)
+{
+  if (d<pos)
+  {
+    for (d;d<=pos;d+=2)
+    {
+      claw.write(d);
+      delay(20-speed);
+    }
+  }  
+      
+  if (d>pos)
+  {
+    for (d;d>=pos;d-=2)
+    {
+      claw.write(d);
+      delay(20-speed);
+    }
+  }  
 }

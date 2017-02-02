@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <QtWidgets>
 
-bool rec=0, play=0;
+bool rec=0, sp=0, play=0;
 int rec_i=0, play_i=0;
 QString rec_tab[1000];
 
@@ -100,14 +100,18 @@ void robot4::on_horizontalSlider_6_valueChanged(int value)
 void robot4::updateMotors(QString command)
 {
     if(arduino->isWritable()){
-        arduino->putChar('A');
+        if (sp==1)
+            arduino->putChar('S');
+        else
+            arduino->putChar('M');
+
         arduino->write(command.toStdString().c_str());
-   qDebug() << "OK: "<< command.toStdString().c_str();
-        if (rec==1)
+        if ((rec==1)&&(sp!=1))
         {
             qDebug() << "OK: "<< command.toStdString().c_str();
             rec_tab[rec_i++]=command.toStdString().c_str();
         }
+        sp=0;
     }
     else{
         qDebug() << "Nie moglem wyslac sygnalu na port szeregowy";
@@ -158,4 +162,11 @@ void robot4::on_resetButton_clicked()
     }
     play_i=0;
     rec_i=0;
+}
+
+void robot4::on_horizontalSlider_7_valueChanged(int value)
+{
+    sp=1;
+    robot4::updateMotors(QString("%1").arg(value));
+
 }

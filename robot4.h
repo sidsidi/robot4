@@ -47,6 +47,8 @@ private slots:
 
     void on_resetButton_clicked();
 
+    void on_horizontalSlider_7_valueChanged(int value);
+
 private:
     Ui::robot4 *ui;
     QSerialPort *arduino;
